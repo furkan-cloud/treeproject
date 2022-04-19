@@ -28,7 +28,8 @@ function App() {
       self: 0,
       total: 0,
       requests: [],
-      error: [],
+      liveRequests: [],
+      // error: [],
       children: [],
     };
     console.log("createcarddata", data);

@@ -45,7 +45,8 @@ const Dummy = (props) => {
       self: 0,
       total: 0,
       requests: [],
-      error: [],
+      liveRequests: [],
+      // error: [],
       children: [],
     };
     console.log("addcarddata", data);
@@ -67,7 +68,7 @@ const Dummy = (props) => {
 
   const makeRequest = () => {
     console.log("makerequest", props);
-    props.visible(true);
+    props.setVisible(true);
   };
 
   const userMenu = (
@@ -225,7 +226,7 @@ const TreeCard = (props) => {
               key={cardItem?.id}
               itemId={cardItem?.id}
               parentId={cardItem?.parentId}
-              visible={setVisible}
+              setVisible={handleVisible}
             />
           </>
         }
@@ -249,10 +250,7 @@ const TreeCard = (props) => {
             }}
           >
             <Avatar src="https://joeschmoe.io/api/v1/random" />
-            <Form.Item
-              name="name"
-              initialValue={props.name}
-            >
+            <Form.Item name="name" initialValue={props.name}>
               <Input
                 value={props.name}
                 onBlur={selfBlur}

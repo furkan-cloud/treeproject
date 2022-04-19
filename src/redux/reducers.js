@@ -11,7 +11,7 @@ const initialState = {
   //   children: [],
   // },
   tree: [],
-  requests: []
+  requests: [],
   // selectedNode: [],
 };
 
@@ -127,7 +127,7 @@ export default function appReducer(state = initialState, action) {
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.parentId;
       });
-      const childIndex = state.tree[index].children.findIndex((item) => {
+      const childIndex = state?.tree[index]?.children?.findIndex((item) => {
         return item == action.payload.itemId;
       });
       console.log("index", index);
@@ -172,22 +172,60 @@ export default function appReducer(state = initialState, action) {
     case "requestPoint": {
       console.log("clearaction", action.payload);
       const index = state.tree.findIndex((item) => {
-        return item.name == action.payload.name;
+        return item.id == action.payload.id;
       });
-      state.tree.find((item) => {
-        if (item.id == action.payload.id) {
-          if (item.self > action.payload.request) {
-            item.self = item.self - action.payload.request;
-            item.total = item.total - action.payload.request;
-            calculatePoint(state.tree, item.parentId, -action.payload.request);
-            calculatePoint(state.tree, item.parentId, -action.payload.request);
-          } else {
-          }
-        }
+      console.log("requestindex", index);
+      const updatedRequestList = update(state.tree[index].requests, {
+        $push: [action.payload],
       });
+      console.log("updatedRequestList", updatedRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, index),
+          {
+            ...state.tree[index],
+            requests: [...updatedRequestList],
+          },
+          ...state.tree.slice(index + 1),
+        ],
+      };
+      console.log("state", state);
+      if (action.payload.status == "rejected") {
+        console.log("rejected return");
+        return { ...state };
+      }
+      console.log("devam");
+      const liveRequestList = update(state.tree[index].liveRequests, {
+        $push: [action.payload],
+      });
+      console.log("liveRequestList", liveRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, index),
+          {
+            ...state.tree[index],
+            liveRequests: [...liveRequestList],
+          },
+          ...state.tree.slice(index + 1),
+        ],
+      };
+      console.log("laststate", state);
+      // state.tree.find((item) => {
+      //   if (item.id == action.payload.id) {
+      //     if (item.self > action.payload.request) {
+      //       item.self = item.self - action.payload.request;
+      //       item.total = item.total - action.payload.request;
+      //       calculatePoint(state.tree, item.parentId, -action.payload.request);
+      //       calculatePoint(state.tree, item.parentId, -action.payload.request);
+      //     } else {
+      //     }
+      //   }
+      // });
 
       return {
-        state,
+        ...state,
       };
     }
     case "acceptRequest": {
