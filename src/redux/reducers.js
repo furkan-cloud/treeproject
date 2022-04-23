@@ -23,7 +23,6 @@ const initialState = {
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
     case GET_SAVED_DATA: {
-      console.log("geteaction", action);
       return {
         ...state,
         tree: [...action.payload.tree],
@@ -31,7 +30,6 @@ export default function appReducer(state = initialState, action) {
     }
 
     case CREATE_CARD: {
-      console.log("acreaction", action);
       return {
         tree: [
           ...state.tree,
@@ -49,17 +47,14 @@ export default function appReducer(state = initialState, action) {
             return item.id == action.payload.data.parentId;
           }
         });
-        console.log("index", index);
         if (index > 0) {
           newState = update(state.tree, {
             [index]: { children: { $push: [action.payload.data.id] } },
           });
-          console.log("newstate", newState);
         } else {
           const index = state.tree.findIndex((item) => {
             return item.id == action.payload.data.parentId;
           });
-          console.log("indexelse", index);
           newState = update(state.tree, {
             [index]: { children: { $push: [action.payload.data.id] } },
           });
@@ -69,7 +64,6 @@ export default function appReducer(state = initialState, action) {
           0: { children: { $push: [action.payload.data.id] } },
         });
       }
-      console.log("stater", newState);
       return {
         tree: [...newState, action.payload.data],
       };
@@ -80,9 +74,6 @@ export default function appReducer(state = initialState, action) {
         return item.id == action.payload.id;
       });
       const change = action.payload.self - state.tree[index].self;
-      console.log("change", change);
-      console.log("updateaction", index);
-      console.log("updateaction", action);
       const newData = update(state.tree[index], {
         $merge: {
           id: action.payload.id,
@@ -91,7 +82,6 @@ export default function appReducer(state = initialState, action) {
           total: action.payload.total + change,
         },
       });
-      console.log("newData", newData);
       state = {
         ...state,
         tree: [
@@ -100,7 +90,6 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(index + 1),
         ],
       };
-      console.log("state", state);
       return {
         ...state,
         tree: [
@@ -109,8 +98,6 @@ export default function appReducer(state = initialState, action) {
       };
     }
     case DELETE_CARD: {
-      console.log("removeaction", action.payload);
-      console.log("removestate", state);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.props.parentId;
       });
@@ -132,8 +119,6 @@ export default function appReducer(state = initialState, action) {
         ],
       };
 
-      console.log("index", index);
-      console.log("childIndex", childIndex);
       if (index > -1 && childIndex > -1) {
         const newChildList = update(state.tree, {
           [index]: { children: { $splice: [[childIndex, 1]] } },
@@ -143,20 +128,14 @@ export default function appReducer(state = initialState, action) {
           tree: [...newChildList],
         };
       }
-      console.log("sstebef", state);
       const childList = getAllChildren(state.tree, action.payload.props.itemId);
-      console.log("childlist", childList);
       const copyData = { ...state };
-      console.log("copyData", copyData);
       const returnedData = removeItems(copyData, childList);
-      console.log("newData", returnedData);
       state = {
         ...state,
         tree: [...returnedData],
       };
-      console.log("laststate", state);
       // delete item
-
       const updatedList = update(state.tree, {
         $splice: [[itemIndex, 1]],
       });
@@ -167,21 +146,17 @@ export default function appReducer(state = initialState, action) {
       };
     }
     case CLEAR_ALL: {
-      console.log("clearaction", action.payload);
       return {
         tree: [],
       };
     }
     case REQUEST_POINT: {
-      console.log("clearaction", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
       });
-      console.log("requestindex", index);
       const updatedRequestList = update(state.tree[index].requests, {
         $push: [action.payload],
       });
-      console.log("updatedRequestList", updatedRequestList);
       state = {
         ...state,
         tree: [
@@ -193,20 +168,15 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(index + 1),
         ],
       };
-      console.log("state", state);
       if (action.payload.status == "rejected") {
-        console.log("rejected return");
         return { ...state };
       }
-      console.log("devam");
       const receiverIndex = state.tree.findIndex((item) => {
         return item.id == action.payload.receiverId;
       });
-      console.log("receiverIndex", receiverIndex);
       const liveRequestList = update(state.tree[receiverIndex].liveRequests, {
         $push: [action.payload],
       });
-      console.log("liveRequestList", liveRequestList);
       state = {
         ...state,
         tree: [
@@ -218,31 +188,18 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(receiverIndex + 1),
         ],
       };
-      console.log("laststate", state);
 
       return {
         ...state,
       };
     }
     case ACCEPT_REQUEST: {
-      console.log("acceptRequest", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
       });
-      console.log("index", index);
       const requestIndex = state.tree.findIndex((item) => {
         return item.id == state?.tree[index]?.liveRequests[0].id;
       });
-      console.log("requestindex", requestIndex);
-      const updatedRequestList = update(
-        state.tree[requestIndex].requests[
-          state.tree[requestIndex].requests.length - 1
-        ].status,
-        {
-          $set: "rejected",
-        }
-      );
-      console.log("updatedRequestList", updatedRequestList);
       state = {
         ...state,
         tree: [
@@ -265,13 +222,8 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(requestIndex + 1),
         ],
       };
-      console.log("state", state);
       const requestedPoint = state.tree[index].liveRequests[0].requestPoint;
 
-      const updatedLiveRequestList = update(state.tree[index].liveRequests, {
-        $set: [],
-      });
-      console.log("updatedLiveRequestList", updatedLiveRequestList);
       state = {
         ...state,
         tree: [
@@ -283,9 +235,6 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(index + 1),
         ],
       };
-      console.log("statelast", state);
-      console.log("index", index);
-      console.log("change", requestedPoint);
 
       const newData = update(state.tree[requestIndex], {
         $merge: {
@@ -293,7 +242,6 @@ export default function appReducer(state = initialState, action) {
           total: state.tree[requestIndex].total + requestedPoint,
         },
       });
-      console.log("newData", newData);
       state = {
         ...state,
         tree: [
@@ -302,7 +250,6 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(requestIndex + 1),
         ],
       };
-      console.log("state", state);
       state = {
         ...state,
         tree: [
@@ -320,7 +267,6 @@ export default function appReducer(state = initialState, action) {
           total: state.tree[index].total - requestedPoint,
         },
       });
-      console.log("newGivenData", newGivenData);
       state = {
         ...state,
         tree: [
@@ -329,7 +275,6 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(index + 1),
         ],
       };
-      console.log("state", state);
 
       return {
         ...state,
@@ -343,24 +288,12 @@ export default function appReducer(state = initialState, action) {
       };
     }
     case REJECT_REQUEST: {
-      console.log("rejectRequest", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
       });
-      console.log("index", index);
       const requestIndex = state.tree.findIndex((item) => {
         return item.id == state?.tree[index]?.liveRequests[0].id;
       });
-      console.log("requestindex", requestIndex);
-      const updatedRequestList = update(
-        state.tree[requestIndex].requests[
-          state.tree[requestIndex].requests.length - 1
-        ].status,
-        {
-          $set: "rejected",
-        }
-      );
-      console.log("updatedRequestList", updatedRequestList);
       state = {
         ...state,
         tree: [
@@ -383,12 +316,7 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(requestIndex + 1),
         ],
       };
-      console.log("state", state);
 
-      const updatedLiveRequestList = update(state.tree[index].liveRequests, {
-        $set: [],
-      });
-      console.log("updatedLiveRequestList", updatedLiveRequestList);
       state = {
         ...state,
         tree: [
@@ -400,8 +328,6 @@ export default function appReducer(state = initialState, action) {
           ...state.tree.slice(index + 1),
         ],
       };
-      console.log("statelast", state);
-      console.log("index", index);
 
       return {
         ...state,

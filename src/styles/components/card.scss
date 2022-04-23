@@ -15,6 +15,10 @@
     justify-content: end;
 }
 
+// .ant-card-body {
+//    padding:10px
+// }
+
 .card-item {
     max-width: 220px; margin: auto; position: relative
 }
@@ -24,4 +28,13 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
-    padding-left: 15px;}
+    padding-left: 15px;
+}
+
+    .ant-alert-with-description {
+         padding: 2px;
+    }
+
+    .ant-alert {
+        padding: 0px;
+    }

@@ -12,11 +12,7 @@ const Request = (props) => {
     state.tree.find((item) => item.id === props.id)
   );
 
-  console.log("cardItemrequestfileprops", props);
-  console.log("cardItemrequestfile", cardItem);
-
   const handleAlert = (status) => {
-    console.log("handle alert worked");
     if (status === "Insufficient points") {
       setShowAlert(() => (
         <Alert

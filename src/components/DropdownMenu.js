@@ -9,13 +9,10 @@ import { addCard, deleteCard } from "../redux/actions/tree";
 
 const DropdownMenu = (props) => {
     const dispatch = useDispatch();
-  
-    const cardItem = useSelector((state) =>
+      const cardItem = useSelector((state) =>
       state.tree.find((item) => item.id === props.itemId)
     );
-  
-    console.log("dummy", cardItem);
-    
+      
     const addNewCard = () => {
         const data = {
         id: uuidv4(),
@@ -27,7 +24,6 @@ const DropdownMenu = (props) => {
         liveRequests: [],
         children: [],
       };
-      console.log("addcarddata", data);
       dispatch(
         addCard({
           data,
@@ -36,7 +32,6 @@ const DropdownMenu = (props) => {
     };
   
     const removeItem = () => {
-      console.log("deleteid", props);
       dispatch(
         deleteCard({
           props,
@@ -45,7 +40,6 @@ const DropdownMenu = (props) => {
     };
   
     const makeRequest = () => {
-      console.log("makerequest", props);
       props.setVisible(true);
     };
   

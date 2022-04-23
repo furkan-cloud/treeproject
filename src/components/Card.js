@@ -16,8 +16,6 @@ const TreeCard = (props) => {
   const [inputs, setInputs] = useState();
   const [name, setName] = useState(cardItem?.name || "");
 
-  console.log("item", cardItem);
-
   const onChangeAll = (inputs) => {
     setInputs({ ...inputs });
     form.setFieldsValue({
@@ -28,17 +26,10 @@ const TreeCard = (props) => {
 
   useEffect(() => {
     onChangeAll(cardItem);
-    console.log("useeffect", cardItem);
   }, [cardItem]);
 
-  const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
-  };
 
   const selfBlur = async (e) => {
-    console.log("e", e);
-    console.log("e", props);
-    console.log("cardItem", cardItem);
     dispatch(
       updateCard({
         id: cardItem.id,
@@ -73,7 +64,6 @@ const TreeCard = (props) => {
           form={form}
           className="cart__form"
           initialValues={{ remember: true }}
-          onFinish={onFinish}
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 20 }}
         >

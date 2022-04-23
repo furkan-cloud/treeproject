@@ -13,13 +13,8 @@ const RequestModal = (props) => {
 
   function handleChange(value) {
     const cardItem = tree.find((item) => item.name === value);
-    console.log("handleditem", cardItem);
-    console.log(`selected ${value}`);
     setName(cardItem);
   }
-
-  console.log("props", props);
-  console.log("name", name);
 
   const handleOk = () => {
     setConfirmLoading(true);
@@ -27,11 +22,9 @@ const RequestModal = (props) => {
     const index = tree.findIndex((item) => {
       return item.id == props.id;
     });
-    console.log("index", index);
     if (name.self > quantity) {
       props.setVisible(false);
       props.handleAlert("request sent");
-      console.log("bigrequest");
       setConfirmLoading(false);
       dispatch(
         requestPoint({
@@ -45,7 +38,6 @@ const RequestModal = (props) => {
     } else {
       props.setVisible(false);
       props.handleAlert("Insufficient points");
-      console.log("smallrequest");
       setConfirmLoading(false);
       dispatch(
         requestPoint({
@@ -60,7 +52,6 @@ const RequestModal = (props) => {
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     props.setVisible(false);
   };
 

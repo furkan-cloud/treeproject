@@ -12,8 +12,6 @@ const Header = () => {
       "cardTree",
       JSON.stringify(state)
     );
-    console.log("savedData", savedData);
-    console.log("savedData", JSON.parse(savedData));
     dispatch(getSavedData(savedData ? JSON.parse(savedData) : { tree: [] }));
   }, []);
 
@@ -27,15 +25,12 @@ const Header = () => {
       liveRequests: [],
       children: [],
     };
-    console.log("createcarddata", data);
     dispatch(
       createCard({
         data,
       })
     );
-    console.log("addworked");
   };
-  console.log("cardapp", state?.tree);
   const handleSave = () => {
     window.localStorage.setItem("cardTree", JSON.stringify(state));
   };
@@ -43,7 +38,6 @@ const Header = () => {
   const handleClear = () => {
     window.localStorage.setItem("cardTree", JSON.stringify({ tree: [] }));
     dispatch(clearAll());
-    console.log("handleClear");
   };
 
   return (
