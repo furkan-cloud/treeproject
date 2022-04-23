@@ -20,10 +20,11 @@ const RequestModal = (props) => {
     const cardItem = tree.find((item) => item.name === value);
     console.log("handleditem", cardItem);
     console.log(`selected ${value}`);
-    setName(cardItem.id);
+    setName(cardItem);
   }
 
   console.log("props", props);
+  console.log("name", name);
 
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
@@ -33,7 +34,7 @@ const RequestModal = (props) => {
       return item.id == props.id;
     });
     console.log("index", index);
-    if (tree[index].self > quantity) {
+    if (name.self > quantity) {
       props.setVisible(false);
       props.handleAlert("request sent");
       console.log("bigrequest");
@@ -42,10 +43,10 @@ const RequestModal = (props) => {
         type: "requestPoint",
         payload: {
           id: props.id,
-          receiverId: name,
-          // name: name,
+          receiverId: name.id,
+          name: props.name,
           requestPoint: quantity,
-          status: "successful",
+          status: "pending",
         },
       });
     } else {
@@ -57,8 +58,8 @@ const RequestModal = (props) => {
         type: "requestPoint",
         payload: {
           id: props.id,
-          receiverId: name,
-          // name: name,
+          receiverId: name.id,
+          name: props.name,
           requestPoint: quantity,
           status: "rejected",
         },
@@ -73,9 +74,6 @@ const RequestModal = (props) => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal with async logic
-      </Button>
       <Modal
         title="Title"
         visible={props.visible}

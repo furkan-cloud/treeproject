@@ -1,68 +1,78 @@
-import React, {useState} from 'react'
-import { Alert, Button, Space,Input } from 'antd';
-const { TextArea } = Input;
+import React, { useState } from "react";
+import { Alert, Button, Space, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+const { TextArea } = Input;
 
 const RequestAlert = (props) => {
-    const cardItem = useSelector((state) =>
-    state.tree.find((item) => item.id === props.itemId)
+  console.log("propsrequestalert", props);
+  const dispatch = useDispatch();
+  const cardItem = useSelector((state) =>
+    state.tree.find((item) => item.id === props.id)
   );
-  const [comment, setComment] = useState("")
+  const [comment, setComment] = useState("");
 
-    console.log("props", props);
-    const acceptRequest = () => {
-        props.setVisible(false);
-        props.handleAlert("accepted")
-        props.dispatch({
-            type: "requestPoint",
-            payload: {
-                id: props.id,
-                receiverId: props.receiverId,
-                // name: name,
-                requestPoint: props.requestPoint,
-                status: "successful",
-            },
-        });
-    }
+  console.log("cardItemrequest", cardItem);
 
-    const rejectRequest = () => {
-        props.setVisible(false);
-        props.handleAlert("rejected")
-        props.dispatch({
-            type: "requestPoint",
-            payload: {
-                id: props.id,
-                receiverId: props.receiverId,
-                // name: name,
-                requestPoint: props.requestPoint,
-                status: "rejected",
-            },
-        });
+  console.log("props", props);
+  const acceptRequest = () => {
+    // props.setVisible(false);
+    props.handleAlert("accepted");
+    dispatch({
+      type: "acceptRequest",
+      payload: {
+        id: props.id,
+        receiverId: props.receiverId,
+        // name: name,
+        requestPoint: props.requestPoint,
+        status: "successful",
+      },
+    });
+  };
 
-        const handleComment = (e) => {
-setComment(e.target.value)
-        }
- 
+  const rejectRequest = () => {
+    console.log("rejectrequestworked", props);
+    // props.setVisible(false);
+    props.handleAlert("rejected");
+    dispatch({
+      type: "rejectRequest",
+      payload: {
+        id: props.id,
+        receiverId: props.receiverId,
+        // name: name,
+        requestPoint: props.requestPoint,
+        status: "rejected",
+      },
+    });
+  };
+
+  const handleComment = (e) => {
+    setComment(e.target.value);
+  };
+
   return (
-    <Alert
-      message="Point Request"
-      showIcon
-      description={`Sender: ${props.sender} | Amount: ${props.amount}`}
-      type="info"
-      action={
-        <Space direction="vertical">
-            <TextArea rows={4} onChange={handleComment}/>
-          <Button size="small" type="primary" onClick={acceptRequest}>
-            Accept
-          </Button>
-          <Button size="small" danger type="ghost" onClick={rejectRequest}>
-            Decline
-          </Button>
-        </Space>
-      }
-      closable
-    />
-  )
-}
+    <>
+      {cardItem?.liveRequests?.length > 0 ? (
+        <Alert
+          message="Point Request"
+          showIcon
+          description={`Sender: ${cardItem?.liveRequests[0]?.name} | Amount: ${cardItem?.liveRequests[0]?.requestPoint}`}
+          type="info"
+          action={
+            <Space direction="vertical" size="large" align="end">
+              <TextArea rows={2} onChange={handleComment} size={"large"} />
+              <Button size="small" type="primary" onClick={acceptRequest}>
+                Accept
+              </Button>
+              <Button size="small" danger type="ghost" onClick={rejectRequest}>
+                Decline
+              </Button>
+            </Space>
+          }
+          closable
+        />
+      ) : null}
+    </>
+  );
+};
 
-export default RequestAlert
+export default RequestAlert;

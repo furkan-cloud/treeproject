@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import RequestModal from "./RequestModal";
-import RequestAlert from "./Alert";
+import RequestAlert from "./RequestAlert";
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "antd";
 
@@ -10,6 +10,9 @@ const Request = (props) => {
   const cardItem = useSelector((state) =>
     state.tree.find((item) => item.id === props.id)
   );
+
+  console.log("cardItemrequestfileprops", props);
+  console.log("cardItemrequestfile", cardItem);
   // const [number, setNumber] = useState(0);
   const { tree, selectedNode } = useSelector((state) => state);
 
@@ -18,7 +21,7 @@ const Request = (props) => {
     if (status === "Insufficient points") {
       setShowAlert(() => (
         <Alert
-          message="Error Text"
+          // message="Error Text"
           description="Not Enough Points"
           type="error"
         />
@@ -56,8 +59,14 @@ const Request = (props) => {
   return (
     <div>
       {showAlert}
-      <RequestAlert />
-      <RequestModal id={cardItem.id} handleAlert={handleAlert} visible={props.visible} setVisible={props.setVisible} />
+      <RequestAlert id={cardItem.id} handleAlert={handleAlert} />
+      <RequestModal
+        id={cardItem.id}
+        name={cardItem.name}
+        handleAlert={handleAlert}
+        visible={props.visible}
+        setVisible={props.setVisible}
+      />
     </div>
   );
 };

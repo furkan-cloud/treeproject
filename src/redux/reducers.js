@@ -196,22 +196,27 @@ export default function appReducer(state = initialState, action) {
         return { ...state };
       }
       console.log("devam");
-      const liveRequestList = update(state.tree[index].liveRequests, {
+      const receiverIndex = state.tree.findIndex((item) => {
+        return item.id == action.payload.receiverId;
+      });
+      console.log("receiverIndex", receiverIndex);
+      const liveRequestList = update(state.tree[receiverIndex].liveRequests, {
         $push: [action.payload],
       });
       console.log("liveRequestList", liveRequestList);
       state = {
         ...state,
         tree: [
-          ...state.tree.slice(0, index),
+          ...state.tree.slice(0, receiverIndex),
           {
-            ...state.tree[index],
+            ...state.tree[receiverIndex],
             liveRequests: [...liveRequestList],
           },
-          ...state.tree.slice(index + 1),
+          ...state.tree.slice(receiverIndex + 1),
         ],
       };
       console.log("laststate", state);
+
       // state.tree.find((item) => {
       //   if (item.id == action.payload.id) {
       //     if (item.self > action.payload.request) {
@@ -230,14 +235,197 @@ export default function appReducer(state = initialState, action) {
     }
     case "acceptRequest": {
       console.log("acceptRequest", action.payload);
+      const index = state.tree.findIndex((item) => {
+        return item.id == action.payload.id;
+      });
+      console.log("index", index);
+      const requestIndex = state.tree.findIndex((item) => {
+        return item.id == state?.tree[index]?.liveRequests[0].id;
+      });
+      console.log("requestindex", requestIndex);
+      // const newObj2 = update(obj, {b: {$set: obj.b * 2}});
+      const updatedRequestList = update(
+        state.tree[requestIndex].requests[
+          state.tree[requestIndex].requests.length - 1
+        ].status,
+        {
+          $set: "rejected",
+        }
+      );
+      console.log("updatedRequestList", updatedRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, requestIndex),
+          {
+            ...state.tree[requestIndex],
+            requests: [
+              ...state.tree[requestIndex].requests.slice(
+                0,
+                state.tree[requestIndex].requests.length - 1
+              ),
+              {
+                ...state.tree[requestIndex].requests[
+                  state.tree[requestIndex].requests.length - 1
+                ],
+                status: "rejected",
+              },
+            ],
+          },
+          ...state.tree.slice(requestIndex + 1),
+        ],
+      };
+      console.log("state", state);
+      const requestedPoint = state.tree[index].liveRequests[0].requestPoint;
+      const receiverId = state.tree[index].liveRequests[0].receiverId;
+      const senderId = state.tree[index].liveRequests[0].senderId;
+
+      const updatedLiveRequestList = update(state.tree[index].liveRequests, {
+        $set: [],
+      });
+      console.log("updatedLiveRequestList", updatedLiveRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, index),
+          {
+            ...state.tree[index],
+            liveRequests: [],
+          },
+          ...state.tree.slice(index + 1),
+        ],
+      };
+      console.log("statelast", state);
+      console.log("index", index);
+
+      const changeRequestedFrom = action.payload.self - state.tree[index].self;
+      const changeRequestedBy = action.payload.self - state.tree[index].self;
+      console.log("change", requestedPoint);
+      console.log("updateaction", index);
+      // console.log("updateaction", action);
+      const newData = update(state.tree[requestIndex], {
+        $merge: {
+          self: state.tree[requestIndex].self + requestedPoint,
+          total: state.tree[requestIndex].total + requestedPoint,
+        },
+      });
+      console.log("newData", newData);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, requestIndex),
+          newData,
+          ...state.tree.slice(requestIndex + 1),
+        ],
+      };
+      console.log("state", state);
+      state = {
+        // that has all the existing state data
+        ...state,
+        // and a new tree array with the new data
+        tree: [
+          ...calculatePoint(
+            state.tree,
+            state.tree[requestIndex].parentId,
+            requestedPoint
+          ),
+        ],
+      };
+
+      const newGivenData = update(state.tree[index], {
+        $merge: {
+          self: state.tree[index].self - requestedPoint,
+          total: state.tree[index].total - requestedPoint,
+        },
+      });
+      console.log("newGivenData", newGivenData);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, index),
+          newGivenData,
+          ...state.tree.slice(index + 1),
+        ],
+      };
+      console.log("state", state);
+
       return {
-        state,
+        // that has all the existing state data
+        ...state,
+        // and a new tree array with the new data
+        tree: [
+          ...calculatePoint(
+            state.tree,
+            state.tree[index].parentId,
+            -requestedPoint
+          ),
+        ],
       };
     }
     case "rejectRequest": {
       console.log("rejectRequest", action.payload);
+      const index = state.tree.findIndex((item) => {
+        return item.id == action.payload.id;
+      });
+      console.log("index", index);
+      const requestIndex = state.tree.findIndex((item) => {
+        return item.id == state?.tree[index]?.liveRequests[0].id;
+      });
+      console.log("requestindex", requestIndex);
+      // const newObj2 = update(obj, {b: {$set: obj.b * 2}});
+      const updatedRequestList = update(
+        state.tree[requestIndex].requests[
+          state.tree[requestIndex].requests.length - 1
+        ].status,
+        {
+          $set: "rejected",
+        }
+      );
+      console.log("updatedRequestList", updatedRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, requestIndex),
+          {
+            ...state.tree[requestIndex],
+            requests: [
+              ...state.tree[requestIndex].requests.slice(
+                0,
+                state.tree[requestIndex].requests.length - 1
+              ),
+              {
+                ...state.tree[requestIndex].requests[
+                  state.tree[requestIndex].requests.length - 1
+                ],
+                status: "rejected",
+              },
+            ],
+          },
+          ...state.tree.slice(requestIndex + 1),
+        ],
+      };
+      console.log("state", state);
+
+      const updatedLiveRequestList = update(state.tree[index].liveRequests, {
+        $set: [],
+      });
+      console.log("updatedLiveRequestList", updatedLiveRequestList);
+      state = {
+        ...state,
+        tree: [
+          ...state.tree.slice(0, index),
+          {
+            ...state.tree[index],
+            liveRequests: [],
+          },
+          ...state.tree.slice(index + 1),
+        ],
+      };
+      console.log("statelast", state);
+      console.log("index", index);
+
       return {
-        state,
+        ...state,
       };
     }
 
