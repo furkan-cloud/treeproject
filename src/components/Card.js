@@ -126,6 +126,7 @@ function handleClick(e) {
 
 const TreeCard = (props) => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const cardItem = useSelector((state) =>
     state.tree.find((item) => item.id === props.id)
   );
@@ -133,9 +134,24 @@ const TreeCard = (props) => {
   const { tree, selectedNode } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
   const [quantity, setQuantity] = useState(cardItem?.self || 0);
+  const [inputs, setInputs] = useState();
   const [name, setName] = useState(cardItem?.name || "");
 
   console.log("item", cardItem);
+
+  const onChangeAll = (inputs) => {
+    setInputs({ ...inputs });
+    form.setFieldsValue({
+      name: `${inputs.name}`,
+      selfnumber: `${inputs.self}`,
+    });
+  };
+
+  useEffect(() => {
+    // setQuantity(() => cardItem?.self);
+    onChangeAll(cardItem);
+    console.log("useeffect", cardItem);
+  }, [cardItem]);
 
   const onFinish = async (values) => {
     console.log("Received values of form: ", values);
@@ -233,6 +249,7 @@ const TreeCard = (props) => {
       >
         <Form
           name="normal_login"
+          form={form}
           className="cart__form"
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -262,10 +279,10 @@ const TreeCard = (props) => {
             label="Self"
             name="selfnumber"
             className="cart__form__item"
-            initialValue={props.self}
+            initialValue={quantity}
           >
             <InputNumber
-              value={props.self}
+              value={quantity}
               onBlur={selfBlur}
               name="selfnumber"
               // defaultValue={course?.Quantity}
