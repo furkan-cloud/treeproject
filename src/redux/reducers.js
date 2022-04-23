@@ -12,24 +12,11 @@ import {
 } from "./types";
 
 const initialState = {
-  // card: {
-  //   id: "n1",
-  //   name: "Lao",
-  //   self: 0,
-  //   total: 0,
-  //   requests: [],
-  //   error: [],
-  //   children: [],
-  // },
   tree: [],
-  // requests: [],
-  // selectedNode: [],
 };
 
 export default function appReducer(state = initialState, action) {
-  // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
-    // Do something here based on the different types of actions
     case GET_SAVED_DATA: {
       console.log("geteaction", action);
       return {
@@ -59,16 +46,10 @@ export default function appReducer(state = initialState, action) {
         });
         console.log("index", index);
         if (index > 0) {
-          // const collection = [1, 2, {a: [12, 17, 15]}];
-          // newState = update(state.tree[index].children, {
-          //   $push: [action.payload.id],
-          // });
           newState = update(state.tree, {
             [index]: { children: { $push: [action.payload.data.id] } },
           });
           console.log("newstate", newState);
-
-          // state.tree[index].children.push(action.payload.id);
         } else {
           const index = state.tree.findIndex((item) => {
             return item.id == action.payload.data.parentId;
@@ -85,22 +66,11 @@ export default function appReducer(state = initialState, action) {
       }
       console.log("stater", newState);
       return {
-        // ...state,
-        // ...newState,
         tree: [...newState, action.payload.data],
       };
     }
 
-    // ...state.tree,
-    // state.tree[index]: {
-    //   ...state.tree[index],
-    //   state.tree[index].children: [
-    //     ...state.tree[index].children, action.payload.id
-    //   ]
-    // }
-
     case UPDATE_CARD: {
-      // We need to return a new state object
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
       });
@@ -126,21 +96,14 @@ export default function appReducer(state = initialState, action) {
         ],
       };
       console.log("state", state);
-      // console.log(
-      //   "calc",
-      //   calculatePoint(state.tree, state.tree[index].parentId, change)
-      // );
       return {
-        // that has all the existing state data
         ...state,
-        // and a new tree array with the new data
         tree: [
           ...calculatePoint(state.tree, state.tree[index].parentId, change),
         ],
       };
     }
     case DELETE_CARD: {
-      // We need to return a new state object
       console.log("removeaction", action.payload);
       console.log("removestate", state);
       const index = state.tree.findIndex((item) => {
@@ -238,18 +201,6 @@ export default function appReducer(state = initialState, action) {
       };
       console.log("laststate", state);
 
-      // state.tree.find((item) => {
-      //   if (item.id == action.payload.id) {
-      //     if (item.self > action.payload.request) {
-      //       item.self = item.self - action.payload.request;
-      //       item.total = item.total - action.payload.request;
-      //       calculatePoint(state.tree, item.parentId, -action.payload.request);
-      //       calculatePoint(state.tree, item.parentId, -action.payload.request);
-      //     } else {
-      //     }
-      //   }
-      // });
-
       return {
         ...state,
       };
@@ -264,7 +215,6 @@ export default function appReducer(state = initialState, action) {
         return item.id == state?.tree[index]?.liveRequests[0].id;
       });
       console.log("requestindex", requestIndex);
-      // const newObj2 = update(obj, {b: {$set: obj.b * 2}});
       const updatedRequestList = update(
         state.tree[requestIndex].requests[
           state.tree[requestIndex].requests.length - 1
@@ -298,8 +248,6 @@ export default function appReducer(state = initialState, action) {
       };
       console.log("state", state);
       const requestedPoint = state.tree[index].liveRequests[0].requestPoint;
-      const receiverId = state.tree[index].liveRequests[0].receiverId;
-      const senderId = state.tree[index].liveRequests[0].senderId;
 
       const updatedLiveRequestList = update(state.tree[index].liveRequests, {
         $set: [],
@@ -318,12 +266,8 @@ export default function appReducer(state = initialState, action) {
       };
       console.log("statelast", state);
       console.log("index", index);
-
-      const changeRequestedFrom = action.payload.self - state.tree[index].self;
-      const changeRequestedBy = action.payload.self - state.tree[index].self;
       console.log("change", requestedPoint);
-      console.log("updateaction", index);
-      // console.log("updateaction", action);
+
       const newData = update(state.tree[requestIndex], {
         $merge: {
           self: state.tree[requestIndex].self + requestedPoint,
@@ -341,9 +285,7 @@ export default function appReducer(state = initialState, action) {
       };
       console.log("state", state);
       state = {
-        // that has all the existing state data
         ...state,
-        // and a new tree array with the new data
         tree: [
           ...calculatePoint(
             state.tree,
@@ -371,9 +313,7 @@ export default function appReducer(state = initialState, action) {
       console.log("state", state);
 
       return {
-        // that has all the existing state data
         ...state,
-        // and a new tree array with the new data
         tree: [
           ...calculatePoint(
             state.tree,
@@ -393,7 +333,6 @@ export default function appReducer(state = initialState, action) {
         return item.id == state?.tree[index]?.liveRequests[0].id;
       });
       console.log("requestindex", requestIndex);
-      // const newObj2 = update(obj, {b: {$set: obj.b * 2}});
       const updatedRequestList = update(
         state.tree[requestIndex].requests[
           state.tree[requestIndex].requests.length - 1
@@ -479,48 +418,7 @@ const removeItems = (array, itemsToRemove) => {
   });
 };
 
-function getAllParents(beginNode, nodeId, AllParents) {
-  var AllParents = [];
-
-  console.log("one", nodeId);
-  const index = beginNode.findIndex((item) => {
-    return item.id == nodeId;
-  });
-  if (beginNode[index].parentId) {
-    // var AllParents = [...beginNode[index].parentId];
-    AllParents.push(beginNode[index].parentId);
-    console.log("all", AllParents);
-    console.log("ids", beginNode[index].parentId);
-  } else {
-    return AllParents;
-  }
-
-  AllParents.forEach(function (child) {
-    console.log("child", child);
-    // AllParents.push(...[...getAllChildren(beginNode, child)]);
-    getAllParents(beginNode, child);
-  });
-}
-
-function postOrder(root) {
-  if (root.children) {
-    console.log("inside");
-    root.total = 0;
-    root.children.forEach((child) => {
-      console.log("child", child);
-      console.log("root", root);
-      console.log("roottotal", root.total);
-      root.total += postOrder(child);
-    });
-    root.total += root.self;
-  } else {
-    root.total = root.self;
-  }
-  return root.total;
-}
-
 function calculatePoint(treeList, parentId, change) {
-  // const parentId = nodeList[nodeId].parentId;
   const index = treeList.findIndex((item) => {
     return item.id == parentId;
   });
