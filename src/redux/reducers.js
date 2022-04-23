@@ -132,13 +132,15 @@ export default function appReducer(state = initialState, action) {
       });
       console.log("index", index);
       console.log("childIndex", childIndex);
-      const newChildList = update(state.tree, {
-        [index]: { children: { $splice: [[childIndex, 1]] } },
-      });
-      state = {
-        ...state,
-        tree: [...newChildList],
-      };
+      if (index > -1 && childIndex > -1) {
+        const newChildList = update(state.tree, {
+          [index]: { children: { $splice: [[childIndex, 1]] } },
+        });
+        state = {
+          ...state,
+          tree: [...newChildList],
+        };
+      }
       console.log("sstebef", state);
       const childList = getAllChildren(state.tree, action.payload.itemId);
       console.log("childlist", childList);
@@ -155,12 +157,12 @@ export default function appReducer(state = initialState, action) {
       const itemIndex = state.tree.findIndex((item) => {
         return item.id == action.payload.itemId;
       });
-      const lastChildList = update(state.tree, {
+      const updatedList = update(state.tree, {
         $splice: [[itemIndex, 1]],
       });
       return {
         ...state,
-        tree: [...lastChildList],
+        tree: [...updatedList],
       };
     }
     case "clearAll": {
