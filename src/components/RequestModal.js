@@ -1,6 +1,7 @@
 import { Modal, Button, Select, Form, InputNumber } from "antd";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { requestPoint } from "../redux/actions/tree";
 
 const { Option } = Select;
 const RequestModal = (props) => {
@@ -39,31 +40,29 @@ const RequestModal = (props) => {
       props.handleAlert("request sent");
       console.log("bigrequest");
       setConfirmLoading(false);
-      dispatch({
-        type: "requestPoint",
-        payload: {
+      dispatch(
+        requestPoint({
           id: props.id,
           receiverId: name.id,
           name: props.name,
           requestPoint: quantity,
           status: "pending",
-        },
-      });
+        })
+      );
     } else {
       props.setVisible(false);
       props.handleAlert("Insufficient points");
       console.log("smallrequest");
       setConfirmLoading(false);
-      dispatch({
-        type: "requestPoint",
-        payload: {
+      dispatch(
+        requestPoint({
           id: props.id,
           receiverId: name.id,
           name: props.name,
           requestPoint: quantity,
           status: "rejected",
-        },
-      });
+        })
+      );
     }
   };
 

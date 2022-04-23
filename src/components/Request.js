@@ -7,6 +7,7 @@ import { Alert } from "antd";
 const Request = (props) => {
   const dispatch = useDispatch();
   const [showAlert, setShowAlert] = useState("");
+  const { tree, selectedNode } = useSelector((state) => state);
   const cardItem = useSelector((state) =>
     state.tree.find((item) => item.id === props.id)
   );
@@ -14,7 +15,6 @@ const Request = (props) => {
   console.log("cardItemrequestfileprops", props);
   console.log("cardItemrequestfile", cardItem);
   // const [number, setNumber] = useState(0);
-  const { tree, selectedNode } = useSelector((state) => state);
 
   const handleAlert = (status) => {
     console.log("handle alert worked");
@@ -29,7 +29,7 @@ const Request = (props) => {
     } else if (status === "request sent") {
       setShowAlert(() => (
         <Alert
-          message="Success Text"
+          // message="Success Text"
           description="Request sent"
           type="success"
         />

@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 // import { createCard, addCard, deleteCard } from "../redux/reducers";
 import appReducer from "../redux/reducers";
 import Request from "./Request";
+import { addCard, updateCard, deleteCard } from "../redux/actions/tree";
 
 const { Meta } = Card;
 const { SubMenu } = Menu;
@@ -50,20 +51,21 @@ const Dummy = (props) => {
       children: [],
     };
     console.log("addcarddata", data);
-    dispatch({
-      type: "addCard",
-      payload: data,
-    });
+    dispatch(
+      addCard({
+        data,
+      })
+    );
     // dispatch(addCard(data));
   };
 
   const removeItem = () => {
     console.log("deleteid", props);
-    dispatch({
-      type: "deleteCard",
-      payload: props,
-    });
-    // dispatch(deleteCard(props));
+    dispatch(
+      deleteCard({
+        props,
+      })
+    );
   };
 
   const makeRequest = () => {
@@ -180,17 +182,14 @@ const TreeCard = (props) => {
     console.log("e", e);
     console.log("e", props);
     console.log("cardItem", cardItem);
-    const data = {
-      id: cardItem.id,
-      name: name,
-      self: Number(quantity),
-      total: cardItem.total,
-    };
-    console.log("updateitemdata", data);
-    dispatch({
-      type: "updateCard",
-      payload: data,
-    });
+    dispatch(
+      updateCard({
+        id: cardItem.id,
+        name: name,
+        self: Number(quantity),
+        total: cardItem.total,
+      })
+    );
     // await setNumber(Number(e.target.value));
     // updateItem(props,e.target.value);
   };

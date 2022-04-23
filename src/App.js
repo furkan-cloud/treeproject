@@ -11,6 +11,7 @@ import Card from "./components/Card";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TreeList from "./components/CardList";
+import { createCard, clearAll } from "./redux/actions/tree";
 
 function App() {
   const { tree } = useSelector((state) => state);
@@ -29,28 +30,24 @@ function App() {
       total: 0,
       requests: [],
       liveRequests: [],
-      // error: [],
       children: [],
     };
     console.log("createcarddata", data);
-    // dispatch(createCard(data));
-    dispatch({
-      type: "createCard",
-      payload: data,
-    });
+    dispatch(
+      createCard({
+        data,
+      })
+    );
     console.log("addworked");
   };
   console.log("cardapp", tree);
-
   const handleSave = () => {
     localStorage.setItem("localsetitemworked", JSON.stringify(tree));
   };
 
   const handleClear = () => {
     // dispatch(clearAllData());
-    dispatch({
-      type: "clearAll",
-    });
+    dispatch(clearAll());
     console.log("handleClear");
   };
 

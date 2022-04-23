@@ -1,4 +1,14 @@
 import update from "immutability-helper";
+import {
+  CREATE_CARD,
+  ADD_CARD,
+  UPDATE_CARD,
+  DELETE_CARD,
+  CLEAR_ALL,
+  REQUEST_POINT,
+  ACCEPT_REQUEST,
+  REJECT_REQUEST,
+} from "./types";
 
 const initialState = {
   // card: {
@@ -19,23 +29,23 @@ export default function appReducer(state = initialState, action) {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // Do something here based on the different types of actions
-    case "createCard": {
+    case CREATE_CARD: {
       console.log("acreaction", action);
       return {
         tree: [
           ...state.tree,
           {
-            ...action.payload,
+            ...action.payload.data,
           },
         ],
       };
     }
-    case "addCard": {
+    case ADD_CARD: {
       let newState;
       if (state.tree.length > 1) {
         const index = state.tree.findIndex((item) => {
           if (item.parentId) {
-            return item.id == action.payload.parentId;
+            return item.id == action.payload.data.parentId;
           }
         });
         console.log("index", index);
@@ -45,30 +55,30 @@ export default function appReducer(state = initialState, action) {
           //   $push: [action.payload.id],
           // });
           newState = update(state.tree, {
-            [index]: { children: { $push: [action.payload.id] } },
+            [index]: { children: { $push: [action.payload.data.id] } },
           });
           console.log("newstate", newState);
 
           // state.tree[index].children.push(action.payload.id);
         } else {
           const index = state.tree.findIndex((item) => {
-            return item.id == action.payload.parentId;
+            return item.id == action.payload.data.parentId;
           });
           console.log("indexelse", index);
           newState = update(state.tree, {
-            [index]: { children: { $push: [action.payload.id] } },
+            [index]: { children: { $push: [action.payload.data.id] } },
           });
         }
       } else {
         newState = update(state.tree, {
-          0: { children: { $push: [action.payload.id] } },
+          0: { children: { $push: [action.payload.data.id] } },
         });
       }
       console.log("stater", newState);
       return {
         // ...state,
         // ...newState,
-        tree: [...newState, action.payload],
+        tree: [...newState, action.payload.data],
       };
     }
 
@@ -80,7 +90,7 @@ export default function appReducer(state = initialState, action) {
     //   ]
     // }
 
-    case "updateCard": {
+    case UPDATE_CARD: {
       // We need to return a new state object
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
@@ -120,7 +130,7 @@ export default function appReducer(state = initialState, action) {
         ],
       };
     }
-    case "deleteCard": {
+    case DELETE_CARD: {
       // We need to return a new state object
       console.log("removeaction", action.payload);
       console.log("removestate", state);
@@ -165,13 +175,13 @@ export default function appReducer(state = initialState, action) {
         tree: [...updatedList],
       };
     }
-    case "clearAll": {
+    case CLEAR_ALL: {
       console.log("clearaction", action.payload);
       return {
         tree: [],
       };
     }
-    case "requestPoint": {
+    case REQUEST_POINT: {
       console.log("clearaction", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
@@ -235,7 +245,7 @@ export default function appReducer(state = initialState, action) {
         ...state,
       };
     }
-    case "acceptRequest": {
+    case ACCEPT_REQUEST: {
       console.log("acceptRequest", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
@@ -364,7 +374,7 @@ export default function appReducer(state = initialState, action) {
         ],
       };
     }
-    case "rejectRequest": {
+    case REJECT_REQUEST: {
       console.log("rejectRequest", action.payload);
       const index = state.tree.findIndex((item) => {
         return item.id == action.payload.id;
