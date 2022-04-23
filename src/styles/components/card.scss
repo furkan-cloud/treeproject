@@ -9,3 +9,19 @@
 .ant-alert-action {
     margin-top:60px
 }
+
+.ant-card-head {
+    display: flex;
+    justify-content: end;
+}
+
+.card-item {
+    max-width: 220px; margin: auto; position: relative
+}
+
+.cart__form-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding-left: 15px;}

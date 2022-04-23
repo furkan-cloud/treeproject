@@ -30,7 +30,7 @@ const RequestAlert = (props) => {
   console.log("props", props);
   const handleAcceptRequest = () => {
     // props.setVisible(false);
-    // props.handleAlert("accepted");
+    props.handleAlert("accepted");
 
     const index = tree.findIndex((item) => {
       return item.id == props.id;
@@ -55,7 +55,7 @@ const RequestAlert = (props) => {
   const handleRejectRequest = () => {
     console.log("rejectrequestworked", props);
     // props.setVisible(false);
-    // props.handleAlert("rejected");
+    props.handleAlert("rejected");
 
     // const index = tree.findIndex((item) => {
     //   return item.id == props.id;
