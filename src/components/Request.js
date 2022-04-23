@@ -14,14 +14,12 @@ const Request = (props) => {
 
   console.log("cardItemrequestfileprops", props);
   console.log("cardItemrequestfile", cardItem);
-  // const [number, setNumber] = useState(0);
 
   const handleAlert = (status) => {
     console.log("handle alert worked");
     if (status === "Insufficient points") {
       setShowAlert(() => (
         <Alert
-          // message="Error Text"
           description="Not Enough Points"
           type="error"
         />
@@ -29,7 +27,6 @@ const Request = (props) => {
     } else if (status === "request sent") {
       setShowAlert(() => (
         <Alert
-          // message="Success Text"
           description="Request sent"
           type="success"
         />
@@ -46,7 +43,6 @@ const Request = (props) => {
       setShowAlert(() => (
         <Alert
           message="Request rejected"
-          // description="Request sent"
           type="error"
         />
       ));

@@ -1,21 +1,15 @@
-import { Modal, Button, Select, Form, InputNumber } from "antd";
+import { Modal, Select, Form, InputNumber } from "antd";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { requestPoint } from "../redux/actions/tree";
 
 const { Option } = Select;
 const RequestModal = (props) => {
-  const [visible, setVisible] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [name, setName] = useState("");
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState("Content of the modal");
-  const { tree, selectedNode } = useSelector((state) => state);
+  const { tree } = useSelector((state) => state);
   const dispatch = useDispatch();
-
-  const showModal = () => {
-    setVisible(true);
-  };
 
   function handleChange(value) {
     const cardItem = tree.find((item) => item.name === value);
@@ -28,7 +22,6 @@ const RequestModal = (props) => {
   console.log("name", name);
 
   const handleOk = () => {
-    setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
 
     const index = tree.findIndex((item) => {
@@ -81,7 +74,6 @@ const RequestModal = (props) => {
         onCancel={handleCancel}
       >
         <Select
-          // defaultValue="lucy"
           style={{ width: 120 }}
           onChange={handleChange}
         >
@@ -97,10 +89,8 @@ const RequestModal = (props) => {
           className="cart__form__item"
         >
           <InputNumber
-            // onBlur={selfBlur}
             value={quantity}
             name="request amount"
-            // defaultValue={quantity}
             onChange={(e) => setQuantity(e)}
           />
         </Form.Item>

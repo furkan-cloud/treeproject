@@ -10,6 +10,11 @@ import {
   REJECT_REQUEST,
   GET_SAVED_DATA,
 } from "./types";
+import {
+  calculatePoint,
+  removeItems,
+  getAllChildren,
+} from "../utils/reducerHelpers";
 
 const initialState = {
   tree: [],
@@ -107,11 +112,26 @@ export default function appReducer(state = initialState, action) {
       console.log("removeaction", action.payload);
       console.log("removestate", state);
       const index = state.tree.findIndex((item) => {
-        return item.id == action.payload.parentId;
+        return item.id == action.payload.props.parentId;
       });
       const childIndex = state?.tree[index]?.children?.findIndex((item) => {
-        return item == action.payload.itemId;
+        return item == action.payload.props.itemId;
       });
+      const itemIndex = state.tree.findIndex((item) => {
+        return item.id == action.payload.props.itemId;
+      });
+
+      state = {
+        ...state,
+        tree: [
+          ...calculatePoint(
+            state.tree,
+            state.tree[itemIndex].parentId,
+            -state.tree[itemIndex].total
+          ),
+        ],
+      };
+
       console.log("index", index);
       console.log("childIndex", childIndex);
       if (index > -1 && childIndex > -1) {
@@ -124,7 +144,7 @@ export default function appReducer(state = initialState, action) {
         };
       }
       console.log("sstebef", state);
-      const childList = getAllChildren(state.tree, action.payload.itemId);
+      const childList = getAllChildren(state.tree, action.payload.props.itemId);
       console.log("childlist", childList);
       const copyData = { ...state };
       console.log("copyData", copyData);
@@ -136,12 +156,11 @@ export default function appReducer(state = initialState, action) {
       };
       console.log("laststate", state);
       // delete item
-      const itemIndex = state.tree.findIndex((item) => {
-        return item.id == action.payload.itemId;
-      });
+
       const updatedList = update(state.tree, {
         $splice: [[itemIndex, 1]],
       });
+
       return {
         ...state,
         tree: [...updatedList],
@@ -392,45 +411,4 @@ export default function appReducer(state = initialState, action) {
     default:
       return state;
   }
-}
-
-function getAllChildren(beginNode, nodeId) {
-  var allChildren = [];
-  console.log("beginNode", beginNode);
-  const index = beginNode.findIndex((item) => {
-    return item.id == nodeId;
-  });
-  var allChildren = [...beginNode[index].children];
-  console.log(allChildren);
-
-  allChildren.forEach(function (childNode) {
-    allChildren.push(...getAllChildren(beginNode, childNode));
-  });
-
-  return allChildren;
-}
-
-const removeItems = (array, itemsToRemove) => {
-  console.log("array", array);
-  console.log("itemsToRemove", itemsToRemove);
-  return array.tree.filter((v) => {
-    return !itemsToRemove.includes(v.id);
-  });
-};
-
-function calculatePoint(treeList, parentId, change) {
-  const index = treeList.findIndex((item) => {
-    return item.id == parentId;
-  });
-  console.log("parentId", parentId);
-  console.log("index", index);
-  if (parentId) {
-    treeList[index].total += change;
-    console.log("worked");
-    if (treeList[index].parentId) {
-      console.log("d", treeList[index].parentId);
-      calculatePoint(treeList, treeList[index].parentId, change);
-    }
-  }
-  return treeList;
 }

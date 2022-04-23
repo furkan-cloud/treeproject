@@ -1,13 +1,4 @@
 import { useSelector } from "react-redux";
-import Card from "./components/Card";
-// import {
-//   createCard,
-//   addCard,
-//   deleteCard,
-//   clearAllData,
-//   selectNode,
-// } from "./redux/cardSlice";
-import { useEffect } from "react";
 import TreeList from "./components/CardList";
 import Header from "./components/Header";
 
