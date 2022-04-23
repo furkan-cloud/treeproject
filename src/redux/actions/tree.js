@@ -39,3 +39,8 @@ export const rejectRequest = (payload) => ({
   type: types.REJECT_REQUEST,
   payload,
 });
+
+export const getSavedData = (payload) => ({
+  type: types.GET_SAVED_DATA,
+  payload,
+});

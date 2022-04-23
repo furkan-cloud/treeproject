@@ -1,5 +1,4 @@
-import { Button } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Card from "./components/Card";
 // import {
 //   createCard,
@@ -8,60 +7,18 @@ import Card from "./components/Card";
 //   clearAllData,
 //   selectNode,
 // } from "./redux/cardSlice";
-import { useEffect, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect } from "react";
 import TreeList from "./components/CardList";
-import { createCard, clearAll } from "./redux/actions/tree";
+import Header from "./components/Header";
 
 function App() {
-  const { tree } = useSelector((state) => state);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    localStorage.getItem("cardTree", JSON.stringify(tree));
-    console.log("localgetitemworked");
-  }, []);
-
-  const handleAdd = () => {
-    const data = {
-      id: uuidv4(),
-      name: "",
-      self: 0,
-      total: 0,
-      requests: [],
-      liveRequests: [],
-      children: [],
-    };
-    console.log("createcarddata", data);
-    dispatch(
-      createCard({
-        data,
-      })
-    );
-    console.log("addworked");
-  };
-  console.log("cardapp", tree);
-  const handleSave = () => {
-    localStorage.setItem("localsetitemworked", JSON.stringify(tree));
-  };
-
-  const handleClear = () => {
-    // dispatch(clearAllData());
-    dispatch(clearAll());
-    console.log("handleClear");
-  };
+  const state = useSelector((state) => state);
 
   return (
     <div className="section">
-      <div className="section-btns">
-        <Button type="primary" onClick={handleSave}>
-          SAVE
-        </Button>
-        <Button onClick={handleAdd}>ADD</Button>
-        <Button onClick={handleClear}>CLEAR ALL</Button>
-      </div>
+      <Header />
       <div className="section-cards">
-        {tree ? <TreeList /> : <h1>There is no data</h1>}
+        {state?.tree ? <TreeList /> : <h1>There is no data</h1>}
       </div>
     </div>
   );

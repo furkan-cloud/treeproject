@@ -6,3 +6,4 @@ export const CLEAR_ALL = "CLEAR_ALL";
 export const REQUEST_POINT = "REQUEST_POINT";
 export const ACCEPT_REQUEST = "ACCEPT_REQUEST";
 export const REJECT_REQUEST = "REJECT_REQUEST";
+export const GET_SAVED_DATA = "GET_SAVED_DATA";

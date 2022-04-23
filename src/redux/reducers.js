@@ -8,6 +8,7 @@ import {
   REQUEST_POINT,
   ACCEPT_REQUEST,
   REJECT_REQUEST,
+  GET_SAVED_DATA,
 } from "./types";
 
 const initialState = {
@@ -21,7 +22,7 @@ const initialState = {
   //   children: [],
   // },
   tree: [],
-  requests: [],
+  // requests: [],
   // selectedNode: [],
 };
 
@@ -29,6 +30,14 @@ export default function appReducer(state = initialState, action) {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // Do something here based on the different types of actions
+    case GET_SAVED_DATA: {
+      console.log("geteaction", action);
+      return {
+        ...state,
+        tree: [...action.payload.tree],
+      };
+    }
+
     case CREATE_CARD: {
       console.log("acreaction", action);
       return {
